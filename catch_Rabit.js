@@ -11,31 +11,47 @@ const possibleMoves = [[215,23],
   [520,75],
   [350,150]];
 
+class Counter {
+  constructor (){
+    this.initialTime = 0;
+  }
+  
+  count(){
+    this.initialTime++;
+  }
+};
+  
 let isTouched = false;
-let count = 0;
+let time = new Counter();
 
 const randomGenerator = function(list){
   let randomIndex = Math.floor(Math.random()*list.length);
   return list[randomIndex];
 }
 
+const withPx = number => number + "px";
+
+const randomPos = function(document){
+  let topLeft = randomGenerator(possibleMoves);
+  document.getElementById("rabit").style.top = withPx(topLeft[0]);
+  document.getElementById("rabit").style.left = withPx(topLeft[1]);
+}
+
 const timeOut = function(){
   document.getElementById("rabit").style.display = "block";
   document.getElementById("start").style.pointerEvents = "none";
   let rabbitPos = setInterval(() => {
-    let topLeft = randomGenerator(possibleMoves);
-    document.getElementById("rabit").style.top = topLeft[0] + "px";
-    document.getElementById("rabit").style.left = topLeft[1] + "px";
+    randomPos(document);
     if(isTouched){
       clearInterval(rabbitPos);
     };
-    count = count + 1;
+    time.count();
   },500);
 }
 
 const gameOver = function(){
   isTouched = true;
-  count = Math.round(count/2);
+  let count = Math.round(time.initialTime / 2);
   document.getElementById("rabit").onclick = null;
   alert("YOU WON! time taken is "+count+" seconds");
 };
